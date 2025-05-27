@@ -11,6 +11,14 @@ build-type:         Simple
 
 common warnings
     ghc-options: -Wall
+    default-extensions:
+      OverloadedStrings
+      NamedFieldPuns
+      RecordWildCards
+      -- OrPatterns
+      OverloadedRecordDot
+      QuasiQuotes
+      -- MultilineStrings
 
 library
     import:           warnings
@@ -23,7 +31,8 @@ library
       Accipere.Networking
       Accipere.Misc
 
-    build-depends:    base ^>=4.19.2.0
+    build-depends:
+      base ^>=4.19.2.0
     hs-source-dirs:   src
     default-language: GHC2021
 
@@ -31,14 +40,6 @@ executable accipere
     import:           warnings
     main-is:          Main.hs
     -- other-modules:
-    default-extensions:
-      OverloadedStrings
-      NamedFieldPuns
-      RecordWildCards
-      -- OrPatterns
-      OverloadedRecordDot
-      QuasiQuotes
-      -- MultilineStrings
     build-depends:
         base ^>=4.19.2.0,
         accipere
@@ -50,7 +51,6 @@ test-suite accipere-test
     import:           warnings
     default-language: GHC2021
     -- other-modules:
-    -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs

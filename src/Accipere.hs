@@ -1,16 +1,15 @@
-module Accipere (accipere) where
+module Accipere where
 
-import Accipere.CPU
+import Accipere.CPU (CPU)
 import Accipere.FileSystem
 import Accipere.GPU
 import Accipere.Misc
 import Accipere.Networking
-import Accipere.RAM
+import Accipere.RAM (RAM)
 
-accipere :: [String] -> IO ()
-accipere [] = putStrLn "no arguments provided."
-accipere args'@(arg : args) = do
-  case arg of
-    "--all" -> putStrLn arg
-    "--none" -> putStrLn undefined
-    _ -> putStrLn "pog"
+data Accipere = Accipere
+  { cpu :: CPU,
+    ram :: RAM
+    -- gpu :: [GPU],
+    -- net :: [Interface]
+  }

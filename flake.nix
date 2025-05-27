@@ -8,25 +8,49 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
       imports = [
         inputs.haskell-flake.flakeModule
+        inputs.treefmt-nix.flakeModule
       ];
-
-      systems = inputs.nixpkgs.lib.systems.flakeExposed;
-
       perSystem =
-        { pkgs, self', ... }:
+        {
+          pkgs,
+          self',
+          config,
+          ...
+        }:
+        let
+          stack-wrapped = pkgs.symlinkJoin {
+            name = "stack";
+            paths = [ pkgs.stack ];
+            buildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/stack \
+                --add-flags "\
+                  --nix \
+                  --system-ghc \
+                  --no-install-ghc \
+                "
+            '';
+          };
+        in
         {
           packages.default = self'.packages.accipere;
           haskellProjects.default = {
             basePackages = pkgs.haskellPackages;
+            #basePackages = pkgs.haskell.packages.ghc9121;
             packages = {
-              # Dependencies
+              # Override dependencies
               # aeson.source = "1.5.0.0";
             };
             settings = {
@@ -37,9 +61,33 @@
             };
             devShell = {
               enable = true;
-              # tools = hp: { cabal = hp.cabal; };
               hlsCheck.enable = false;
+              tools =
+                hp:
+                {
+                  inherit (hp)
+                    cabal-install
+                    haskell-language-server
+                    hlint
+                    stylish-haskell
+                    ;
+                  inherit (pkgs)
+                    ghciwatch
+                    ;
+                  ghcid = null;
+                  stack = stack-wrapped;
+                  treefmt = config.treefmt.build.wrapper;
+                }
+                // config.treefmt.build.programs;
             };
+          };
+          treefmt.config = {
+            projectRootFile = ".git/config";
+            package = pkgs.treefmt;
+            programs.stylish-haskell.enable = true;
+            programs.nixfmt-rfc-style.enable = true;
+            programs.cabal-fmt.enable = false;
+            programs.hlint.enable = false;
           };
         };
     };
