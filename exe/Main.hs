@@ -1,19 +1,19 @@
 module Main where
 
-import Accipere
-import Accipere.CPU (getCPUInfo)
-import Accipere.RAM (getRAMInfo)
-import System.Environment (getArgs)
-import System.Exit (exitFailure)
+import           Accipere
+import           Accipere.CPU       (getCPUInfo)
+import           Accipere.RAM       (getRAMInfo)
+import           System.Environment (getArgs)
+import           System.Exit        (exitFailure)
 
 accipere :: [String] -> IO ()
 accipere args = do
   case args of
-    [] -> printAll
+    []         -> printAll
     ["--help"] -> putStrLn "Need help?"
-    ["--cpu"] -> getCPUInfo >>= print
-    ["--ram"] -> getRAMInfo >>= print
-    arg : _ -> putStrLn $ "[!] Argument is not valid: " <> arg
+    ["--cpu"]  -> getCPUInfo >>= print
+    ["--ram"]  -> getRAMInfo >>= print
+    arg : _    -> putStrLn $ "[!] Argument is not valid: " <> arg
   where
     printAll :: IO ()
     printAll = do

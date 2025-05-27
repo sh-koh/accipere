@@ -17,7 +17,10 @@
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       imports = [
         inputs.haskell-flake.flakeModule
         inputs.treefmt-nix.flakeModule
@@ -69,7 +72,6 @@
                     cabal-install
                     haskell-language-server
                     hlint
-                    stylish-haskell
                     ;
                   inherit (pkgs)
                     ghciwatch
@@ -84,7 +86,6 @@
           treefmt.config = {
             projectRootFile = ".git/config";
             package = pkgs.treefmt;
-            programs.stylish-haskell.enable = true;
             programs.nixfmt-rfc-style.enable = true;
             programs.cabal-fmt.enable = false;
             programs.hlint.enable = false;

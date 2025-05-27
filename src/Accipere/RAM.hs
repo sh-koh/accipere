@@ -8,11 +8,11 @@ module Accipere.RAM where
 -- 16 - SwapFree:       16394236 kB
 
 data RAM = RAM
-  { total :: Int,
-    free :: Int,
+  { total     :: Int,
+    free      :: Int,
     available :: Int,
     swapTotal :: Int,
-    swapFree :: Int
+    swapFree  :: Int
   }
 
 instance Show RAM where
@@ -48,5 +48,5 @@ getRAMInfo = do
     go line =
       case words line of
         (_ : value : _) -> value
-        [] -> ""
-        _ -> ""
+        []              -> ""
+        _               -> ""

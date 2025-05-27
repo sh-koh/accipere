@@ -1,11 +1,11 @@
 module Accipere.CPU where
 
 data CPU = CPU
-  { vendor :: String,
+  { vendor    :: String,
     modelName :: String,
     frequency :: Double,
-    cores :: Int,
-    threads :: Int
+    cores     :: Int,
+    threads   :: Int
   }
 
 instance Show CPU where
@@ -39,5 +39,5 @@ getCPUInfo = do
     go [] = []
     go line =
       case dropWhile (/= ':') line of
-        [] -> ""
+        []         -> ""
         (_ : rest) -> dropWhile (== ' ') rest
