@@ -1,8 +1,10 @@
-# 💻 Accipere (WIP)
-Accipere (english for "get" in latin) is an quick system information prompter
-for GNU/Linux written in Haskell.
+# 💻 Accipere
+Accipere (a latin word meaning "get" in english) is an quick system information prompter
+for GNU/Linux written in Rust 🦀.
 
 ## 📔 Usage
+> To do
+
 ```bash
 $ accipere
           ▗▄▄▄       ▗▄▄▄▄    ▄▄▄▖             user@hostname
@@ -62,7 +64,6 @@ hidden = false
 color = `#642424`
 
 ...
-
 ```
 
 ## 🔨 Building
@@ -72,12 +73,7 @@ color = `#642424`
 $ nix build .#
 ```
 
-#### `cabal`:
+#### `cargo`:
 ```bash
-$ cabal build
-```
-
-#### `stack`:
-```bash
-$ stack build
+$ cargo build
 ```

@@ -1,1 +1,0 @@
-module Accipere.Misc where
