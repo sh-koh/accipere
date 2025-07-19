@@ -1,15 +1,17 @@
 {
-  description = "A neofetch alternative, written in haskell";
+  description = "A neofetch alternative, written in Rust.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    haskell-flake.url = "github:srid/haskell-flake";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    git-hooks-nix = {
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -22,8 +24,8 @@
         "aarch64-linux"
       ];
       imports = [
-        inputs.haskell-flake.flakeModule
         inputs.treefmt-nix.flakeModule
+        inputs.git-hooks-nix.flakeModule
       ];
       perSystem =
         {
@@ -32,63 +34,64 @@
           config,
           ...
         }:
-        let
-          stack-wrapped = pkgs.symlinkJoin {
-            name = "stack";
-            paths = [ pkgs.stack ];
-            buildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/stack \
-                --add-flags "\
-                  --nix \
-                  --system-ghc \
-                  --no-install-ghc \
-                "
-            '';
-          };
-        in
         {
-          packages.default = self'.packages.accipere;
-          haskellProjects.default = {
-            basePackages = pkgs.haskellPackages;
-            #basePackages = pkgs.haskell.packages.ghc9121;
-            packages = {
-              # Override dependencies
-              # aeson.source = "1.5.0.0";
-            };
-            settings = {
-              # Settings for dependecies
-              # aeson = {
-              #   check = false;
-              # };
-            };
-            devShell = {
-              enable = true;
-              hlsCheck.enable = false;
-              tools =
-                hp:
-                {
-                  inherit (hp)
-                    cabal-install
-                    haskell-language-server
-                    hlint
-                    ;
-                  inherit (pkgs)
-                    ghciwatch
-                    ;
-                  ghcid = null;
-                  stack = stack-wrapped;
-                  treefmt = config.treefmt.build.wrapper;
-                }
-                // config.treefmt.build.programs;
+          formatter = pkgs.nixfmt-rfc-style;
+          packages = {
+            default = self'.packages.accipere;
+            accipere = pkgs.rustPlatform.buildRustPackage (_finalAttrs: {
+              pname = "accipere";
+              version = "0.1.0";
+              src = ./.;
+              buildInputs = with pkgs; [ ];
+              nativeBuildInputs = with pkgs; [ ];
+              strictDeps = true;
+              useFetchCargoVendor = true;
+              cargoLock.lockFile = ./Cargo.lock;
+            });
+          };
+          devShells = {
+            default = self'.devShells.devel;
+            devel = pkgs.mkShell {
+              formatter = pkgs.rustfmt;
+              inputsFrom = [ self'.packages.accipere ];
+              packages = with pkgs; [
+                just # No make
+                config.treefmt.build.wrapper
+                # Rust
+                bacon # Watcher
+                cargo-info
+                hyperfine
+                lldb # Debugger
+                mprocs
+
+                # Nix
+                deadnix # Find dead code
+                statix # Linter and suggestions
+              ];
+              shellHook = ''
+                ${config.pre-commit.installationScript}
+              '';
             };
           };
-          treefmt.config = {
-            projectRootFile = ".git/config";
-            package = pkgs.treefmt;
-            programs.nixfmt-rfc-style.enable = true;
-            programs.cabal-fmt.enable = false;
-            programs.hlint.enable = false;
+          pre-commit.settings.hooks = {
+            treefmt = {
+              enable = true;
+              settings = {
+                formatters = with pkgs; [
+                  nixfmt-rfc-style
+                  rustfmt
+                  yamlfmt
+                ];
+              };
+            };
+            deadnix = {
+              enable = true;
+              settings = {
+                edit = true;
+                quiet = true;
+              };
+            };
+            #clippy.enable = true;
           };
         };
     };

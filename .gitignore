@@ -1,4 +1,5 @@
 .direnv
 result
-dist-newstyle
-.stack-work
+target
+Session.vim
+.pre-commit-config.yaml

@@ -1,15 +1,19 @@
 # 💻 Accipere (WIP)
-Accipere (english for "get" in latin) is an quick system information prompter
-for GNU/Linux written in Haskell.
+Accipere (a latin word meaning "get" in english) is an quick system information
+prompter for GNU/Linux written in Rust 🦀. It is basically a small
+[fastfetch](https://github.com/fastfetch-cli/fastfetch) clone using the crab
+🦀.
 
 ## 📔 Usage
+> To do
+
 ```bash
 $ accipere
           ▗▄▄▄       ▗▄▄▄▄    ▄▄▄▖             user@hostname
           ▜███▙       ▜███▙  ▟███▛
            ▜███▙       ▜███▙▟███▛              OS: NixOS 25.11 (Xantusia) x86_64
-            ▜███▙       ▜██████▛               Host: MS-7B86 (1.0)
-     ▟█████████████████▙ ▜████▛     ▟▙         Kernel: Linux 6.14.7-zen1
+            ▜███▙       ▜██████▛               Host: ...
+     ▟█████████████████▙ ▜████▛     ▟▙         Kernel: Linux 6.14.7
     ▟███████████████████▙ ▜███▙    ▟██▙        Uptime: 4 hours, 59 mins
            ▄▄▄▄▖           ▜███▙  ▟███▛        Packages: 1450 (nix-system), 3298 (nix-user)
           ▟███▛             ▜██▛ ▟███▛         Shell: bash 5.2.37
@@ -26,7 +30,7 @@ $ accipere
          ▟███▛  ▜███▙       ▜███▙              Swap: 0 B / 15.63 GiB (0%)
          ▝▀▀▀    ▀▀▀▀▘       ▀▀▀▘              Disk (/): 73.76 GiB / 168.38 GiB (44%) - ext4
                                                Disk (/home): 47.60 GiB / 59.50 GiB (80%) - ext4
-                                               Local IP (enp34s0): 192.168.1.10/24
+                                               IP (...): 192.168.1.10/24
                                                Locale: en_US.UTF-8
 ```
 
@@ -39,6 +43,7 @@ There is an exemple file in this repo in the `example` directory.<br>
 **Config file location:** `$XDG_CONFIG_HOME/accipere/config.toml`
 
 #### Settings
+> (Not implemented)
 ```toml
 section_separators = '-'
 
@@ -62,7 +67,6 @@ hidden = false
 color = `#642424`
 
 ...
-
 ```
 
 ## 🔨 Building
@@ -72,12 +76,7 @@ color = `#642424`
 $ nix build .#
 ```
 
-#### `cabal`:
+#### `cargo`:
 ```bash
-$ cabal build
-```
-
-#### `stack`:
-```bash
-$ stack build
+$ cargo build
 ```

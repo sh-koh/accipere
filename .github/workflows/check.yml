@@ -19,17 +19,17 @@ jobs:
       - name: Check flake
         run: nix flake check --verbose
 
-      - name: Remove dead nix code
-        uses: astro/deadnix-action@main
-        with:
-          flags: '-h -e'
-          create_pr: false
-          author: 'github-actions'
-          commit_message: '「❄️」 nix(deadnix): removed dead code'
-
-      - name: Clean up the code
-        uses: phucleeuwu/statix-action@v2
-        with:
-          open_pr: false
-          author: 'github-actions'
-          commit_message: '「❄️」 nix(statix): clean code'
+      # - name: Remove dead nix code
+      #   uses: astro/deadnix-action@main
+      #   with:
+      #     flags: '-h -e'
+      #     create_pr: false
+      #     author: 'github-actions'
+      #     commit_message: '「❄️」 nix(deadnix): removed dead code'
+      #
+      # - name: Clean up the code
+      #   uses: phucleeuwu/statix-action@v2
+      #   with:
+      #     open_pr: false
+      #     author: 'github-actions'
+      #     commit_message: '「❄️」 nix(statix): clean code'
